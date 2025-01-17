@@ -7,8 +7,6 @@ import Product.exceptions.EmptyException;
 import Product.model.Product;
 import Product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.EmptyStackException;
 import java.util.List;
 
 @Service
@@ -24,7 +22,7 @@ public class ProductService {
     public ProductResponse saveProduct(ProductRequest productRequest) {
         Product newProduct = ProductMapper.dtoToEntity(productRequest);
         Product savedProduct = productRepository.save(newProduct);
-        return ProductMapper.entityToDto(savedProduct);
+        return ProductMapper.entityToDTO(savedProduct);
     }
 
     // READ

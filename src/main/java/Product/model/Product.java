@@ -1,10 +1,12 @@
 package Product.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.URL;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,4 +26,11 @@ public class Product {
     @Column(nullable = false)
     private String imageURL;
 
+    public Product(
+            double price,
+            @NotBlank(message = "Name is required!")
+            String name,
+            @URL(protocol = "https", message = "Image (URL) is required!")
+            String imageURL
+    ) {}
 }
