@@ -1,5 +1,5 @@
 package Product.dto;
 
-public record ProductResponse {
+public record ProductResponse() {
 
 } {}

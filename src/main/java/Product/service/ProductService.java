@@ -1,27 +1,41 @@
 package Product.service;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import Product.dto.ProductMapper;
+import Product.dto.ProductRequest;
+import Product.dto.ProductResponse;
+import Product.exceptions.EmptyException;
+import Product.model.Product;
+import Product.repository.ProductRepository;
+import org.springframework.stereotype.Service;
 
+import java.util.EmptyStackException;
+import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter @Setter
-@Entity @Table(name = "products")
+@Service
 public class ProductService {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private final ProductRepository productRepository;
 
-    @Column(nullable = false)
-    private double price;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
-    @Column(nullable = false)
-    private String name;
+    // CREATE
+    public ProductResponse saveProduct(ProductRequest productRequest) {
+        Product newProduct = ProductMapper.dtoToEntity(productRequest);
+        Product savedProduct = productRepository.save(newProduct);
+        return ProductMapper.entityToDto(savedProduct);
+    }
 
-    private String imageURL;
+    // READ
+    public List<ProductResponse> getProducts() {
+
+        List<Product> products = productRepository.findAll();
+
+        if (products.isEmpty()) throw new EmptyException();
+
+        return (List<ProductResponse>) products.stream().map(product -> ProductMapper.entityToDTO(product)).toList();
+
+    }
 
 }
