@@ -1,4 +1,5 @@
-package model;
+package Product.model;
+
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,12 +11,18 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter @Setter
 @Entity @Table(name = "products")
-public class User {
+public class Product {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String username;
-    private String email;
-    private String password;
+
+    @Column(nullable = false)
+    private double price;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String imageURL;
 
 }
