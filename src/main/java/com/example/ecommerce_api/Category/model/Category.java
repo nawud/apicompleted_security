@@ -22,6 +22,14 @@ public class Category {
     @Size(min = 5, max = 30, message = "Category name must be between 5 and 30 characters.")
     private String name;
 
+    public Category(
+
+            @NotNull @NotBlank(message = "Title is required!")
+            @Size(min = 5, max = 50, message = "Username must be between 5 and 50 characters.")
+            String username
+
+    ) {}
+
     // name
     // - not NULL
     // - max 30 characters
