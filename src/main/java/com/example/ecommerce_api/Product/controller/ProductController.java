@@ -1,5 +1,6 @@
 package com.example.ecommerce_api.Product.controller;
 
+import com.example.ecommerce_api.Product.dto.ProductMapper;
 import com.example.ecommerce_api.Product.dto.ProductRequest;
 import com.example.ecommerce_api.Product.dto.ProductResponse;
 import com.example.ecommerce_api.Product.model.Product;
@@ -10,53 +11,54 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
-@RestController @RequestMapping("api/products")
+@RestController
+@RequestMapping("/api/products")
 public class ProductController {
-
     private final ProductService productService;
 
-    public ProductController (ProductService productService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
-    // CREATE
-    @PostMapping("/api/products")
-    public void createProduct(@RequestBody Product newProduct) { productService.addProduct(newProduct); }
+    @PostMapping
+    public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductRequest request) {
+        Product product = productService.addProduct(ProductMapper.dtoToEntity(request));
+        return new ResponseEntity<>(ProductMapper.entityToDTO(product), HttpStatus.CREATED);
+    }
 
-    // READ
-    @GetMapping("/api/products")
-    public List<Product> readAllProducts() { return productService.readProducts(); }
+    @GetMapping
+    public ResponseEntity<List<ProductResponse>> getAllProducts() {
+        List<ProductResponse> products = productService.readProducts()
+                .stream()
+                .map(ProductMapper::entityToDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(products);
+    }
 
-    // UPDATE
-    @PutMapping("/api/products/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable long id, @RequestBody Product updatingProduct) {
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable long id) {
+        return productService.findProductById(id)
+                .map(product -> ResponseEntity.ok(ProductMapper.entityToDTO(product)))
+                .orElse(ResponseEntity.notFound().build());
+    }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductResponse> updateProduct(
+            @PathVariable long id,
+            @Valid @RequestBody ProductRequest request) {
         try {
-
-            Product product = productService.updateProduct(id, updatingProduct);
-            return new ResponseEntity<>(product, HttpStatus.ACCEPTED);
-
-        } catch (Exception e) { return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE); }
-
+            Product product = productService.updateProduct(id, ProductMapper.dtoToEntity(request));
+            return ResponseEntity.ok(ProductMapper.entityToDTO(product));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    // DELETE
-    @PostMapping("/api/products/{id}")
-    public void deleteProduct(@PathVariable long id) { productService.deleteProduct(id); }
-
-    /* FILTERS */
-
-    // ID
-    @GetMapping("/api/products/{id}")
-    public ResponseEntity<Product> findProductById(@PathVariable long id) {
-
-        Optional<Product> foundProduct = productService.findProductById(id);
-
-        if (foundProduct.isPresent()) { return new ResponseEntity<>(foundProduct.get(), HttpStatus.FOUND); }
-        else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable long id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
     }
-
 }
