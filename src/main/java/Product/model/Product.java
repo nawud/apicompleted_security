@@ -14,6 +14,24 @@ import org.hibernate.validator.constraints.URL;
 @Entity @Table(name = "products")
 public class Product {
 
+    // id
+
+    // name
+    // - not NULL
+    // - max 50 characters
+
+    // price
+    // - higher than 0
+
+    // rating (OPT)
+    // - Value between 0 and 5
+
+    // categoryID (Many to One)
+    // - linked to existent category
+
+    // userID (Many to Many)
+    // - linked to existent product
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
