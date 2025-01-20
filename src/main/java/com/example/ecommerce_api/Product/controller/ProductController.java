@@ -22,15 +22,15 @@ public class ProductController {
     }
 
     // CREATE
-    @PostMapping()
+    @PostMapping("/api/products")
     public void createProduct(@RequestBody Product newProduct) { productService.addProduct(newProduct); }
 
     // READ
-    @GetMapping()
+    @GetMapping("/api/products")
     public List<Product> readAllProducts() { return productService.readProducts(); }
 
     // UPDATE
-    @PutMapping()
+    @PutMapping("/api/products/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable long id, @RequestBody Product updatingProduct) {
 
         try {
@@ -43,13 +43,13 @@ public class ProductController {
     }
 
     // DELETE
-    @PostMapping
+    @PostMapping("/api/products/{id}")
     public void deleteProduct(@PathVariable long id) { productService.deleteProduct(id); }
 
     /* FILTERS */
 
     // ID
-    @GetMapping("")
+    @GetMapping("/api/products/{id}")
     public ResponseEntity<Product> findProductById(@PathVariable long id) {
 
         Optional<Product> foundProduct = productService.findProductById(id);
