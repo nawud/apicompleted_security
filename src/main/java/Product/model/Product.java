@@ -2,6 +2,8 @@ package Product.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +16,16 @@ import org.hibernate.validator.constraints.URL;
 @Entity @Table(name = "products")
 public class Product {
 
-    // id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    private double price;
+
+    @NotBlank @NotNull
+    @Size(min = 5, max = 50, message = "Product name must be between 5 and 50 characters.")
+    private String name;
+
+    private String imageURL;
 
     // name
     // - not NULL
@@ -31,24 +42,4 @@ public class Product {
 
     // userID (Many to Many)
     // - linked to existent product
-
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @Column(nullable = false)
-    private double price;
-
-    @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
-    private String imageURL;
-
-    public Product(
-            double price,
-            @NotBlank(message = "Name is required!")
-            String name,
-            @URL(protocol = "https", message = "Image (URL) is required!")
-            String imageURL
-    ) {}
 }
