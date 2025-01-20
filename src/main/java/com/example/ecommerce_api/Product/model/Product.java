@@ -28,6 +28,9 @@ public class Product {
 
     private String imageURL;
 
+    public Product(double price, @NotBlank(message = "Name is required!") String name, @URL(protocol = "https", message = "Image (URL) is required!") String s) {
+    }
+
     // name
     // - not NULL
     // - max 50 characters

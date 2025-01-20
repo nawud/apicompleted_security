@@ -1,59 +1,64 @@
 package com.example.ecommerce_api.Category.controller;
 
+import com.example.ecommerce_api.Category.dto.CategoryMapper;
+import com.example.ecommerce_api.Category.dto.CategoryRequest;
+import com.example.ecommerce_api.Category.dto.CategoryResponse;
 import com.example.ecommerce_api.Category.model.Category;
 import com.example.ecommerce_api.Category.service.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/api/categories")
 public class CategoryController {
+    private final CategoryService categoryService;
 
-    private final CategoryService CategoryService;
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
-    public CategoryController(CategoryService CategoryService) { this.CategoryService = CategoryService; }
+    @PostMapping
+    public ResponseEntity<CategoryResponse> createCategory(@Valid @RequestBody CategoryRequest request) {
+        Category category = categoryService.addCategory(CategoryMapper.DTOToEntity(request));
+        return new ResponseEntity<>(CategoryMapper.EntityToDTO(category), HttpStatus.CREATED);
+    }
 
-    // CREATE
-    @PostMapping("/api/categories")
-    public void createCategory(@RequestBody Category newCategory) { CategoryService.addCategory(newCategory); }
+    @GetMapping
+    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
+        List<CategoryResponse> categories = categoryService.readCategories()
+                .stream()
+                .map(CategoryMapper::EntityToDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(categories);
+    }
 
-    // READ
-    @GetMapping("/api/categories")
-    public List<Category> readAllCategories() { return CategoryService.readCategories(); }
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable long id) {
+        return categoryService.findCategoryById(id)
+                .map(category -> ResponseEntity.ok(CategoryMapper.EntityToDTO(category)))
+                .orElse(ResponseEntity.notFound().build());
+    }
 
-    // UPDATE
-    @PutMapping("/api/categories/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable long id, @RequestBody Category updatingCategory) {
-
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryResponse> updateCategory(
+            @PathVariable long id,
+            @Valid @RequestBody CategoryRequest request) {
         try {
-
-            Category Category = CategoryService.updateCategory(id, updatingCategory);
-            return new ResponseEntity<>(Category, HttpStatus.ACCEPTED);
-
-        } catch (Exception e) { return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE); }
-
+            Category category = categoryService.updateCategory(id, CategoryMapper.DTOToEntity(request));
+            return ResponseEntity.ok(CategoryMapper.EntityToDTO(category));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    // DELETE
-    @DeleteMapping("/api/categories/{id}")
-    public void deleteCategory(@PathVariable long id) { CategoryService.deleteCategory(id); }
-
-    /* FILTERS */
-
-    // ID
-    @GetMapping("/api/categories/{id}")
-    public ResponseEntity<Category> findCategoryById(@PathVariable long id) {
-
-        Optional<Category> foundCategory = CategoryService.findCategoryById(id);
-
-        if (foundCategory.isPresent()) {
-
-            return new ResponseEntity<>(foundCategory.get(), HttpStatus.FOUND);
-
-        } else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable long id) {
+        categoryService.deleteCategory(id);
+        return ResponseEntity.noContent().build();
     }
-
 }

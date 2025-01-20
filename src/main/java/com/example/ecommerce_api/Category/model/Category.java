@@ -12,29 +12,24 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter
-@Entity @Table(name = "categories")
+@Entity
+@Table(name = "categories")
 public class Category {
-
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @NotBlank @NotNull
     @Size(min = 5, max = 30, message = "Category name must be between 5 and 30 characters.")
     private String name;
 
-    public Category(
-
-            @NotNull @NotBlank(message = "Title is required!")
-            @Size(min = 5, max = 50, message = "Username must be between 5 and 50 characters.")
-            String username
-
-    ) {}
-
-    // name
-    // - not NULL
-    // - max 30 characters
-
-    // productID (One to Many)
-    // - linked to existent products
-
+    public Category(String name) {
+        this.name = name;
+    }
 }
+// name
+// - not NULL
+// - max 30 characters
+
+// productID (One to Many)
+// - linked to existent products
