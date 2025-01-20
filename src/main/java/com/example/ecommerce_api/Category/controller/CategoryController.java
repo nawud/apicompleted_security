@@ -16,15 +16,15 @@ public class CategoryController {
     public CategoryController(CategoryService CategoryService) { this.CategoryService = CategoryService; }
 
     // CREATE
-    @PostMapping("")
+    @PostMapping("/api/categories")
     public void createCategory(@RequestBody Category newCategory) { CategoryService.addCategory(newCategory); }
 
     // READ
-    @GetMapping("")
+    @GetMapping("/api/categories")
     public List<Category> readAllCategories() { return CategoryService.readCategories(); }
 
     // UPDATE
-    @PutMapping("")
+    @PutMapping("/api/categories/{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable long id, @RequestBody Category updatingCategory) {
 
         try {
@@ -37,13 +37,13 @@ public class CategoryController {
     }
 
     // DELETE
-    @DeleteMapping("")
+    @DeleteMapping("/api/categories/{id}")
     public void deleteCategory(@PathVariable long id) { CategoryService.deleteCategory(id); }
 
     /* FILTERS */
 
     // ID
-    @GetMapping("")
+    @GetMapping("/api/categories/{id}")
     public ResponseEntity<Category> findCategoryById(@PathVariable long id) {
 
         Optional<Category> foundCategory = CategoryService.findCategoryById(id);

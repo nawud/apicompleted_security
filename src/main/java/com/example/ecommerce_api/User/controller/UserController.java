@@ -16,15 +16,15 @@ public class UserController {
     public UserController(UserService userService) { this.userService = userService; }
 
     // CREATE
-    @PostMapping("")
+    @PostMapping("/api/users")
     public void createUser(@RequestBody User newUser) { userService.addUser(newUser); }
 
     // READ
-    @GetMapping("")
+    @GetMapping("/api/users")
     public List<User> readAllUsers() { return userService.readUsers(); }
 
     // UPDATE
-    @PutMapping("")
+    @PutMapping("/api/users/{id}")
     public ResponseEntity<User> updateUser(@PathVariable long id, @RequestBody User updatingUser) {
 
         try {
@@ -37,13 +37,13 @@ public class UserController {
     }
 
     // DELETE
-    @DeleteMapping("")
+    @DeleteMapping("/api/users/{id}")
     public void deleteUser(@PathVariable long id) { userService.deleteUser(id); }
 
     /* FILTERS */
 
     // ID
-    @GetMapping("")
+    @GetMapping("/api/users/{id}")
     public ResponseEntity<User> findUserById(@PathVariable long id) {
 
         Optional<User> foundUser = userService.findUserById(id);
