@@ -28,6 +28,22 @@ public class User {
     // Validation rule yet to be implemented
     private String password;
 
+
+    // DTO Constructor
+    public User(
+
+            @NotNull @NotBlank(message = "Title is required!")
+            @Size(min = 5, max = 50, message = "Username must be between 5 and 50 characters.")
+            String username,
+
+            @NotNull @NotBlank(message = "Title is required!")
+            String email,
+
+            @NotNull @NotBlank(message = "Title is required!")
+            String password
+
+    ) {}
+
     // username
     // - not NULL
     // - max 50 characters
