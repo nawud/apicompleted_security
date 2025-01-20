@@ -19,6 +19,7 @@ public class Product {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotBlank @NotNull
     private double price;
 
     @NotBlank @NotNull

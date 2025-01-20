@@ -1,39 +1,51 @@
 package com.example.ecommerce_api.Product.service;
 
-import com.example.ecommerce_api.Product.dto.ProductMapper;
-import com.example.ecommerce_api.Product.dto.ProductRequest;
-import com.example.ecommerce_api.Product.dto.ProductResponse;
-import com.example.ecommerce_api.Product.exceptions.EmptyException;
 import com.example.ecommerce_api.Product.model.Product;
-import com.example.ecommerce_api.Product.repository.ProductRepository;
+import com.example.ecommerce_api.Product.repository.iProductRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
 
-    private final ProductRepository productRepository;
+    private final iProductRepository iProductRepository;
 
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public ProductService(iProductRepository iProductRepository) {
+        this.iProductRepository = iProductRepository;
     }
 
     // CREATE
-    public ProductResponse saveProduct(ProductRequest productRequest) {
-        Product newProduct = ProductMapper.dtoToEntity(productRequest);
-        Product savedProduct = productRepository.save(newProduct);
-        return ProductMapper.entityToDTO(savedProduct);
-    }
+    public Product addProduct(Product newProduct) { return iProductRepository.save(newProduct); }
 
     // READ
-    public List<ProductResponse> getProducts() {
+    public List<Product> readProducts() { return iProductRepository.findAll(); }
 
-        List<Product> products = productRepository.findAll();
+    // UPDATE
+    public Product updateProduct(long id, Product updatingProduct) {
 
-        if (products.isEmpty()) throw new EmptyException();
+        Optional<Product> foundProduct = iProductRepository.findById(id);
 
-        return (List<ProductResponse>) products.stream().map(product -> ProductMapper.entityToDTO(product)).toList();
+        if (foundProduct.isPresent()) {
+
+            Product existingProduct = foundProduct.get();
+
+            existingProduct.setPrice(updatingProduct.getPrice());
+            existingProduct.setName(updatingProduct.getName());
+            existingProduct.setImageURL(updatingProduct.getImageURL());
+
+            return iProductRepository.save(existingProduct);
+
+        } throw new RuntimeException("Product with id: " + id + " not found.");
 
     }
+
+    // DELETE
+    public void deleteProduct(long id) { iProductRepository.deleteById(id); }
+
+    /* FILTERS */
+
+    // ID
+    public Optional<Product> findProductById(long id) { return iProductRepository.findById(id); }
 
 }
