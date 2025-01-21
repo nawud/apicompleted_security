@@ -22,6 +22,24 @@ public class ProductController {
         this.productService = productService;
     }
 
+    // CREATE
+    @PostMapping("/api/products")
+    public ResponseEntity<ProductResponse> saveProduct(@Valid @RequestBody ProductRequest productRequest) {
+
+        ProductResponse newProductResponse = productService.addProduct(productRequest);
+        return new ResponseEntity<>(newProductResponse, HttpStatus.CREATED);
+
+    }
+
+    // READ
+    @GetMapping("/api/products")
+    public ResponseEntity<List<ProductResponse>> getProducts() {
+
+        return new ResponseEntity<>(productService.readProducts(), HttpStatus.OK);
+    }
+
+
+   /*
     @PostMapping
     public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductRequest request) {
         Product product = productService.addProduct(ProductMapper.dtoToEntity(request));
@@ -62,3 +80,4 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 }
+    */

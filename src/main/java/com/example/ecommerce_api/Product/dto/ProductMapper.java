@@ -14,7 +14,7 @@ public class ProductMapper {
 
     public static ProductResponse entityToDTO(Product product) {
         return new ProductResponse (
-                product.
+                product.getPrice(),
                 product.getName(),
                 product.getImageURL()
         );
