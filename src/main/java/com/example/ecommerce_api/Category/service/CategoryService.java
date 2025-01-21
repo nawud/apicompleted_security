@@ -1,5 +1,8 @@
 package com.example.ecommerce_api.Category.service;
 
+import com.example.ecommerce_api.Category.dto.CategoryMapper;
+import com.example.ecommerce_api.Category.dto.CategoryRequest;
+import com.example.ecommerce_api.Category.dto.CategoryResponse;
 import com.example.ecommerce_api.Category.model.Category;
 import com.example.ecommerce_api.Category.repository.iCategoryRepository;
 import org.springframework.stereotype.Service;
@@ -14,13 +17,28 @@ public class CategoryService {
     public CategoryService(iCategoryRepository iCategoryRepository) { this.iCategoryRepository = iCategoryRepository; }
 
     // CREATE
-    public Category addCategory(Category newCategory) { return iCategoryRepository.save(newCategory); }
+    public CategoryResponse addCategory(CategoryRequest newCategoryRequest) {
+
+        Category newCategory = CategoryMapper.DTOToEntity(newCategoryRequest);
+        Category savedCategory = iCategoryRepository.save(newCategory);
+
+        return CategoryMapper.EntityToDTO(savedCategory);
+
+    }
 
     // READ
-    public List<Category> readCategories() { return iCategoryRepository.findAll(); }
+    public List<CategoryResponse> readCategories() {
+
+        List<Category> categories = iCategoryRepository.findAll();
+
+        if (categories.isEmpty()) throw new RuntimeException("Not found");
+
+        return categories.stream().map(category -> CategoryMapper.EntityToDTO(category)).toList();
+
+    }
 
     // UPDATE
-    public Category updateCategory(long id, Category updatingCategory) {
+    public CategoryResponse updateCategory(long id, CategoryRequest categoryRequest) {
 
         Optional<Category> foundCategory = iCategoryRepository.findById(id);
 
@@ -28,9 +46,9 @@ public class CategoryService {
 
             Category existingCategory = foundCategory.get();
 
-            existingCategory.setName(updatingCategory.getName());
+            existingCategory.setName(categoryRequest.name());
 
-            return iCategoryRepository.save(existingCategory);
+            CategoryResponse categoryResponse = CategoryMapper.EntityToDTO(existingCategory);
 
         } throw new RuntimeException("Category with id: " + id + " not found.");
 
@@ -38,10 +56,5 @@ public class CategoryService {
 
     // DELETE
     public void deleteCategory(long id) { iCategoryRepository.deleteById(id); }
-
-    /* FILTERS */
-
-    // Id
-    public Optional<Category> findCategoryById(long id) { return iCategoryRepository.findById(id); }
 
 }

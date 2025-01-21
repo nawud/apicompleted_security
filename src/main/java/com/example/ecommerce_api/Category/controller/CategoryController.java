@@ -22,26 +22,19 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @PostMapping
-    public ResponseEntity<CategoryResponse> createCategory(@Valid @RequestBody CategoryRequest request) {
-        Category category = categoryService.addCategory(CategoryMapper.DTOToEntity(request));
-        return new ResponseEntity<>(CategoryMapper.EntityToDTO(category), HttpStatus.CREATED);
+    @PostMapping("/api/categories")
+    public ResponseEntity<CategoryResponse> saveCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
+
+        CategoryResponse newCategoryResponse = categoryService.addCategory(categoryRequest);
+        return new ResponseEntity<>(newCategoryResponse, HttpStatus.CREATED);
+
     }
 
-    @GetMapping
+    @GetMapping("/api/categories")
     public ResponseEntity<List<CategoryResponse>> getAllCategories() {
-        List<CategoryResponse> categories = categoryService.readCategories()
-                .stream()
-                .map(CategoryMapper::EntityToDTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(categories);
-    }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable long id) {
-        return categoryService.findCategoryById(id)
-                .map(category -> ResponseEntity.ok(CategoryMapper.EntityToDTO(category)))
-                .orElse(ResponseEntity.notFound().build());
+        return new ResponseEntity<>(categoryService.readCategories(), HttpStatus.OK);
+
     }
 
     @PutMapping("/{id}")
@@ -49,16 +42,16 @@ public class CategoryController {
             @PathVariable long id,
             @Valid @RequestBody CategoryRequest request) {
         try {
-            Category category = categoryService.updateCategory(id, CategoryMapper.DTOToEntity(request));
-            return ResponseEntity.ok(CategoryMapper.EntityToDTO(category));
+            categoryService.updateCategory(id, request);
         } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable long id) {
-        categoryService.deleteCategory(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<CategoryResponse> deleteCategory(@PathVariable long id) {
+        try { categoryService.deleteCategory(id); }
+        catch (RuntimeException e) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
