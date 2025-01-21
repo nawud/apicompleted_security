@@ -11,7 +11,7 @@ public record ProductRequest(
         @Positive @NotNull @NotBlank(message = "Price is required!")
         double price,
 
-        @NotNull @NotBlank(message = "Name is required!") @Size(min = 5, max = 50, message = "Title is requrired, and must be between 5 and 50 characters!")
+        @NotNull @NotBlank(message = "Name is required!") @Size(min = 5, max = 50, message = "Title is required, and must be between 5 and 50 characters!")
         String name,
 
         @URL(protocol = "https", message = "Image (URL) is required!")

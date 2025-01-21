@@ -61,9 +61,4 @@ public class ProductService {
     // DELETE
     public void deleteProduct(long id) { iProductRepository.deleteById(id); }
 
-    /* FILTERS */
-
-    // ID
-    public Optional<Product> findProductById(long id) { return iProductRepository.findById(id); }
-
 }

@@ -47,50 +47,19 @@ public class ProductController {
 
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        }
+        } return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ProductResponse> deleteProduct(@PathVariable long id) {
+
+        try { productService.deleteProduct(id); }
+
+        catch (RuntimeException e) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
+
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
 
 }
-
-
-
-
-
-
-
-
-
-   /*
-    @PostMapping
-    public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductRequest request) {
-        Product product = productService.addProduct(ProductMapper.dtoToEntity(request));
-        return new ResponseEntity<>(ProductMapper.entityToDTO(product), HttpStatus.CREATED);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        List<ProductResponse> products = productService.readProducts()
-                .stream()
-                .map(ProductMapper::entityToDTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(products);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProductById(@PathVariable long id) {
-        return productService.findProductById(id)
-                .map(product -> ResponseEntity.ok(ProductMapper.entityToDTO(product)))
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable long id) {
-        productService.deleteProduct(id);
-        return ResponseEntity.noContent().build();
-    }
-}
-    */
