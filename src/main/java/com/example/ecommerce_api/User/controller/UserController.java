@@ -22,43 +22,36 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
+    @PostMapping("/api/users")
     public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest request) {
-        User user = userService.addUser(UserMapper.DTOToEntity(request));
-        return new ResponseEntity<>(UserMapper.EntityToDTO(user), HttpStatus.CREATED);
+       UserResponse newUserResponse = userService.addUser(request);
+        return new ResponseEntity<>(newUserResponse, HttpStatus.CREATED);
     }
 
-    @GetMapping
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
-        List<UserResponse> users = userService.readUsers()
-                .stream()
-                .map(UserMapper::EntityToDTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(users);
+    @GetMapping("/api/users")
+    public ResponseEntity<List<UserResponse>> getUsers() {
+
+        return new ResponseEntity<>(userService.readUsers(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUserById(@PathVariable long id) {
-        return userService.findUserById(id)
-                .map(user -> ResponseEntity.ok(UserMapper.EntityToDTO(user)))
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PutMapping("/{id}")
+    @PutMapping("/api/users/{id}")
     public ResponseEntity<UserResponse> updateUser(
             @PathVariable long id,
             @Valid @RequestBody UserRequest request) {
         try {
-            User user = userService.updateUser(id, UserMapper.DTOToEntity(request));
-            return ResponseEntity.ok(UserMapper.EntityToDTO(user));
+          userService.updateUser(id, request);
+
         } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        return  new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable long id) {
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<UserResponse> deleteUser(@PathVariable long id) {
+       try {userService.deleteUser(id);}
+
+       catch (RuntimeException e) { return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);}
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
