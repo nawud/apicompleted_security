@@ -1,5 +1,9 @@
 package com.example.ecommerce_api.User.service;
 
+import com.example.ecommerce_api.Product.model.Product;
+import com.example.ecommerce_api.User.dto.UserMapper;
+import com.example.ecommerce_api.User.dto.UserRequest;
+import com.example.ecommerce_api.User.dto.UserResponse;
 import com.example.ecommerce_api.User.model.User;
 import com.example.ecommerce_api.User.repository.iUserRepository;
 import org.springframework.stereotype.Service;
@@ -14,13 +18,24 @@ public class UserService {
     public UserService(iUserRepository iUserRepository) { this.iUserRepository = iUserRepository; }
 
     // CREATE
-    public User addUser(User newUser) { return iUserRepository.save(newUser); }
+    public UserResponse addUser(UserRequest userRequest) {
+        User newUser = UserMapper.DTOToEntity(userRequest);
+        User savedUser = iUserRepository.save(newUser);
+        return UserMapper.EntityToDTO(savedUser);
+    }
 
     // READ
-    public List<User> readUsers() { return iUserRepository.findAll(); }
+    public List<UserResponse> readUsers()
+
+    {
+        List<User> users = iUserRepository.findAll();
+    if (users.isEmpty()) throw new RuntimeException("Not found");
+
+    return users.stream().map(User -> UserMapper.EntityToDTO(User)).toList();
+    }
 
     // UPDATE
-    public User updateUser(long id, User updatingUser) {
+    public User updateUser(long id, UserRequest userRequest) {
 
         Optional<User> foundUser = iUserRepository.findById(id);
 
