@@ -43,9 +43,9 @@ public class UserService {
 
             User existingUser = foundUser.get();
 
-            existingUser.setUsername(updatingUser.getUsername());
-            existingUser.setEmail(updatingUser.getEmail());
-            existingUser.setPassword(updatingUser.getPassword());
+            existingUser.setUsername(userRequest.username());
+            existingUser.setEmail(userRequest.email());
+            existingUser.setPassword(userRequest.password());
 
             return iUserRepository.save(existingUser);
 
