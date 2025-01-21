@@ -39,7 +39,27 @@ public class ProductController {
 
     }
 
+    @PutMapping("/api/products/{id}")
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable long id, @Valid @RequestBody ProductRequest request) {
+        try {
+            productService.updateProduct(id, request);
+        } catch (RuntimeException e) {
+
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
 }
+
+
+
+
+
+
+
 
 
    /*
@@ -65,17 +85,7 @@ public class ProductController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> updateProduct(
-            @PathVariable long id,
-            @Valid @RequestBody ProductRequest request) {
-        try {
-            Product product = productService.updateProduct(id, ProductMapper.dtoToEntity(request));
-            return ResponseEntity.ok(ProductMapper.entityToDTO(product));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable long id) {

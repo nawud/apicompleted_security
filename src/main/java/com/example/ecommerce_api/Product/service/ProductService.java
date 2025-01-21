@@ -40,7 +40,7 @@ public class ProductService {
     }
 
     // UPDATE
-    public Product updateProduct(long id, Product updatingProduct) {
+    public ProductResponse updateProduct(long id, ProductRequest productRequest) {
 
         Optional<Product> foundProduct = iProductRepository.findById(id);
 
@@ -48,11 +48,11 @@ public class ProductService {
 
             Product existingProduct = foundProduct.get();
 
-            existingProduct.setPrice(updatingProduct.getPrice());
-            existingProduct.setName(updatingProduct.getName());
-            existingProduct.setImageURL(updatingProduct.getImageURL());
+            existingProduct.setPrice(productRequest.price());
+            existingProduct.setName(productRequest.name());
+            existingProduct.setImageURL(productRequest.imageURL());
 
-            return iProductRepository.save(existingProduct);
+            ProductResponse productResponse = ProductMapper.entityToDTO(existingProduct);
 
         } throw new RuntimeException("Product with id: " + id + " not found.");
 
