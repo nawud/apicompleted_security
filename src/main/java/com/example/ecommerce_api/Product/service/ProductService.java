@@ -1,5 +1,8 @@
 package com.example.ecommerce_api.Product.service;
 
+import com.example.ecommerce_api.Product.dto.ProductMapper;
+import com.example.ecommerce_api.Product.dto.ProductRequest;
+import com.example.ecommerce_api.Product.dto.ProductResponse;
 import com.example.ecommerce_api.Product.model.Product;
 import com.example.ecommerce_api.Product.repository.iProductRepository;
 import org.springframework.stereotype.Service;
@@ -16,10 +19,25 @@ public class ProductService {
     }
 
     // CREATE
-    public Product addProduct(Product newProduct) { return iProductRepository.save(newProduct); }
+    public ProductResponse addProduct(ProductRequest productRequest) {
+
+        Product newProduct = ProductMapper.dtoToEntity(productRequest);
+        Product savedProduct = iProductRepository.save(newProduct);
+
+        return ProductMapper.entityToDTO(savedProduct);
+
+    }
 
     // READ
-    public List<Product> readProducts() { return iProductRepository.findAll(); }
+    public List<ProductResponse> getProducts() {
+
+        List<Product> products = iProductRepository.findAll();
+
+        if (products.isEmpty()) throw new RuntimeException("Not found");
+
+        return products.stream().map(product -> ProductMapper.entityToDTO(product)).toList();
+
+    }
 
     // UPDATE
     public Product updateProduct(long id, Product updatingProduct) {
