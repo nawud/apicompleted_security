@@ -1,13 +1,10 @@
 package com.example.ecommerce_api.Product.service;
 
-import com.example.ecommerce_api.Product.controller.ProductController;
 import com.example.ecommerce_api.Product.dto.ProductMapper;
 import com.example.ecommerce_api.Product.dto.ProductRequest;
 import com.example.ecommerce_api.Product.dto.ProductResponse;
 import com.example.ecommerce_api.Product.model.Product;
 import com.example.ecommerce_api.Product.repository.iProductRepository;
-import com.example.ecommerce_api.User.dto.UserRequest;
-import com.example.ecommerce_api.User.model.User;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
