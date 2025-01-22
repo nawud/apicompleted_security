@@ -46,7 +46,7 @@ public class UserController {
         return  new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/api/users/{id}")
     public ResponseEntity<UserResponse> deleteUser(@PathVariable long id) {
        try {userService.deleteUser(id);}
 

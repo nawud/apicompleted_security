@@ -1,6 +1,7 @@
 package com.example.ecommerce_api.Product.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -21,10 +22,9 @@ public class Product {
     private long id;
 
     @NotNull
-    @Positive(message = "Price must be greater than 0")
     private double price;
 
-    @NotNull
+    @NotNull @NotBlank
     @Size(min = 5, max = 50, message = "Product name must be between 5 and 50 characters.")
     private String name;
 

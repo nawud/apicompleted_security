@@ -5,6 +5,8 @@ import com.example.ecommerce_api.Product.dto.ProductRequest;
 import com.example.ecommerce_api.Product.dto.ProductResponse;
 import com.example.ecommerce_api.Product.model.Product;
 import com.example.ecommerce_api.Product.service.ProductService;
+import com.example.ecommerce_api.User.dto.UserRequest;
+import com.example.ecommerce_api.User.dto.UserResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +16,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/products")
 public class ProductController {
     private final ProductService productService;
 
@@ -40,18 +41,19 @@ public class ProductController {
     }
 
     @PutMapping("/api/products/{id}")
-    public ResponseEntity<ProductResponse> updateProduct(@PathVariable long id, @Valid @RequestBody ProductRequest request) {
+    public ResponseEntity<ProductResponse> updateProduct(
+            @PathVariable long id,
+            @Valid @RequestBody ProductRequest request) {
         try {
             productService.updateProduct(id, request);
+
         } catch (RuntimeException e) {
-
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        } return new ResponseEntity<>(HttpStatus.OK);
-
+        }
+        return  new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/api/products/{id}")
     public ResponseEntity<ProductResponse> deleteProduct(@PathVariable long id) {
 
         try { productService.deleteProduct(id); }

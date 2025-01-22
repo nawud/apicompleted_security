@@ -9,6 +9,7 @@ public class CategoryMapper {
 
     public static CategoryResponse EntityToDTO(Category category) {
         return new CategoryResponse(
+                category.getId(),
                 category.getName()
         );
     }

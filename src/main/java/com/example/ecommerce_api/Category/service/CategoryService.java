@@ -5,6 +5,8 @@ import com.example.ecommerce_api.Category.dto.CategoryRequest;
 import com.example.ecommerce_api.Category.dto.CategoryResponse;
 import com.example.ecommerce_api.Category.model.Category;
 import com.example.ecommerce_api.Category.repository.iCategoryRepository;
+import com.example.ecommerce_api.User.dto.UserRequest;
+import com.example.ecommerce_api.User.model.User;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +40,7 @@ public class CategoryService {
     }
 
     // UPDATE
-    public CategoryResponse updateCategory(long id, CategoryRequest categoryRequest) {
+    public Category updateCategory(long id, CategoryRequest categoryRequest) {
 
         Optional<Category> foundCategory = iCategoryRepository.findById(id);
 
@@ -48,9 +50,9 @@ public class CategoryService {
 
             existingCategory.setName(categoryRequest.name());
 
-            CategoryResponse categoryResponse = CategoryMapper.EntityToDTO(existingCategory);
+            return iCategoryRepository.save(existingCategory);
 
-        } throw new RuntimeException("Category with id: " + id + " not found.");
+        } throw new RuntimeException("User with id: " + id + " not found.");
 
     }
 

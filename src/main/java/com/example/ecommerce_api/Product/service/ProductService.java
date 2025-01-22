@@ -1,10 +1,13 @@
 package com.example.ecommerce_api.Product.service;
 
+import com.example.ecommerce_api.Product.controller.ProductController;
 import com.example.ecommerce_api.Product.dto.ProductMapper;
 import com.example.ecommerce_api.Product.dto.ProductRequest;
 import com.example.ecommerce_api.Product.dto.ProductResponse;
 import com.example.ecommerce_api.Product.model.Product;
 import com.example.ecommerce_api.Product.repository.iProductRepository;
+import com.example.ecommerce_api.User.dto.UserRequest;
+import com.example.ecommerce_api.User.model.User;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +43,7 @@ public class ProductService {
     }
 
     // UPDATE
-    public ProductResponse updateProduct(long id, ProductRequest productRequest) {
+    public Product updateProduct(long id, ProductRequest productRequest) {
 
         Optional<Product> foundProduct = iProductRepository.findById(id);
 
@@ -52,9 +55,9 @@ public class ProductService {
             existingProduct.setName(productRequest.name());
             existingProduct.setImageURL(productRequest.imageURL());
 
-            ProductResponse productResponse = ProductMapper.entityToDTO(existingProduct);
+            return iProductRepository.save(existingProduct);
 
-        } throw new RuntimeException("Product with id: " + id + " not found.");
+        } throw new RuntimeException("User with id: " + id + " not found.");
 
     }
 

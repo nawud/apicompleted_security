@@ -5,6 +5,8 @@ import com.example.ecommerce_api.Category.dto.CategoryRequest;
 import com.example.ecommerce_api.Category.dto.CategoryResponse;
 import com.example.ecommerce_api.Category.model.Category;
 import com.example.ecommerce_api.Category.service.CategoryService;
+import com.example.ecommerce_api.User.dto.UserRequest;
+import com.example.ecommerce_api.User.dto.UserResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +16,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/categories")
 public class CategoryController {
     private final CategoryService categoryService;
 
@@ -37,18 +38,20 @@ public class CategoryController {
 
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/api/categories/{id}")
     public ResponseEntity<CategoryResponse> updateCategory(
             @PathVariable long id,
             @Valid @RequestBody CategoryRequest request) {
         try {
             categoryService.updateCategory(id, request);
+
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return  new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/api/categories/{id}")
     public ResponseEntity<CategoryResponse> deleteCategory(@PathVariable long id) {
         try { categoryService.deleteCategory(id); }
         catch (RuntimeException e) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
