@@ -14,12 +14,13 @@ public class ProductService {
 
     private final iProductRepository iProductRepository;
 
-    public ProductService(iProductRepository iProductRepository) {
+    public ProductService (iProductRepository iProductRepository) {
+
         this.iProductRepository = iProductRepository;
+
     }
 
-    // CREATE
-    public ProductResponse addProduct(ProductRequest productRequest) {
+    public ProductResponse createProduct (ProductRequest productRequest) {
 
         Product newProduct = ProductMapper.dtoToEntity(productRequest);
         Product savedProduct = iProductRepository.save(newProduct);
@@ -28,19 +29,17 @@ public class ProductService {
 
     }
 
-    // READ
-    public List<ProductResponse> getProducts() {
+    public List<ProductResponse> readProducts() {
 
         List<Product> products = iProductRepository.findAll();
 
         if (products.isEmpty()) throw new RuntimeException("Not found");
 
-        return products.stream().map(product -> ProductMapper.entityToDTO(product)).toList();
+        return products.stream().map(ProductMapper::entityToDTO).toList();
 
     }
 
-    // UPDATE
-    public Product updateProduct(long id, ProductRequest productRequest) {
+    public Product updateProduct (long id, ProductRequest productRequest) {
 
         Optional<Product> foundProduct = iProductRepository.findById(id);
 
@@ -58,7 +57,6 @@ public class ProductService {
 
     }
 
-    // DELETE
-    public void deleteProduct(long id) { iProductRepository.deleteById(id); }
+    public void deleteProduct (long id) { iProductRepository.deleteById(id); }
 
 }

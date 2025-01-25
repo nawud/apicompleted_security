@@ -14,10 +14,13 @@ public class CategoryService {
 
     private final iCategoryRepository iCategoryRepository;
 
-    public CategoryService(iCategoryRepository iCategoryRepository) { this.iCategoryRepository = iCategoryRepository; }
+    public CategoryService (iCategoryRepository iCategoryRepository) {
 
-    // CREATE
-    public CategoryResponse addCategory(CategoryRequest newCategoryRequest) {
+        this.iCategoryRepository = iCategoryRepository;
+
+    }
+
+    public CategoryResponse createCategory (CategoryRequest newCategoryRequest) {
 
         Category newCategory = CategoryMapper.DTOToEntity(newCategoryRequest);
         Category savedCategory = iCategoryRepository.save(newCategory);
@@ -26,19 +29,17 @@ public class CategoryService {
 
     }
 
-    // READ
     public List<CategoryResponse> readCategories() {
 
         List<Category> categories = iCategoryRepository.findAll();
 
         if (categories.isEmpty()) throw new RuntimeException("Not found");
 
-        return categories.stream().map(category -> CategoryMapper.EntityToDTO(category)).toList();
+        return categories.stream().map(CategoryMapper::EntityToDTO).toList();
 
     }
 
-    // UPDATE
-    public Category updateCategory(long id, CategoryRequest categoryRequest) {
+    public Category updateCategory (long id, CategoryRequest categoryRequest) {
 
         Optional<Category> foundCategory = iCategoryRepository.findById(id);
 
@@ -54,7 +55,6 @@ public class CategoryService {
 
     }
 
-    // DELETE
-    public void deleteCategory(long id) { iCategoryRepository.deleteById(id); }
+    public void deleteCategory (long id) { iCategoryRepository.deleteById(id); }
 
 }

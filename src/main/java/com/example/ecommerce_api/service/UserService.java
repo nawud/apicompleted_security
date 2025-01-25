@@ -14,27 +14,32 @@ public class UserService {
 
     private final iUserRepository iUserRepository;
 
-    public UserService(iUserRepository iUserRepository) { this.iUserRepository = iUserRepository; }
+    public UserService(iUserRepository iUserRepository) {
 
-    // CREATE
-    public UserResponse addUser(UserRequest userRequest) {
+        this.iUserRepository = iUserRepository;
+
+    }
+
+    public UserResponse createUser(UserRequest userRequest) {
+
         User newUser = UserMapper.DTOToEntity(userRequest);
         User savedUser = iUserRepository.save(newUser);
+
         return UserMapper.EntityToDTO(savedUser);
+
     }
 
-    // READ
-    public List<UserResponse> readUsers()
+    public List<UserResponse> readUsers() {
 
-    {
         List<User> users = iUserRepository.findAll();
-    if (users.isEmpty()) throw new RuntimeException("Not found");
 
-    return users.stream().map(User -> UserMapper.EntityToDTO(User)).toList();
+        if (users.isEmpty()) throw new RuntimeException("Not found");
+
+        return users.stream().map(UserMapper::EntityToDTO).toList();
+
     }
 
-    // UPDATE
-    public User updateUser(long id, UserRequest userRequest) {
+    public User updateUser (long id, UserRequest userRequest) {
 
         Optional<User> foundUser = iUserRepository.findById(id);
 
@@ -52,12 +57,6 @@ public class UserService {
 
     }
 
-    // DELETE
-    public void deleteUser(long id) { iUserRepository.deleteById(id); }
-
-    /* FILTERS */
-
-    // Id
-    public Optional<User> findUserById(long id) { return iUserRepository.findById(id); }
+    public void deleteUser (long id) { iUserRepository.deleteById(id); }
 
 }
