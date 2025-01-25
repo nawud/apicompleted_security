@@ -12,10 +12,12 @@ import org.hibernate.validator.constraints.URL;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter @Setter
+@Getter
+@Setter
 @Entity
 @Table(name = "products")
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -23,17 +25,20 @@ public class Product {
     @NotNull
     private double price;
 
-    @NotNull @NotBlank
+    @NotNull
+    @NotBlank
     @Size(min = 5, max = 50, message = "Product name must be between 5 and 50 characters.")
     private String name;
 
     @URL(protocol = "https", message = "Image URL must be a valid HTTPS URL")
     private String imageURL;
 
-    // Constructor for creating new products
-    public Product(double price, String name, String imageURL) {
+    public Product (double price, String name, String imageURL) {
+
         this.price = price;
         this.name = name;
         this.imageURL = imageURL;
+
     }
+
 }
