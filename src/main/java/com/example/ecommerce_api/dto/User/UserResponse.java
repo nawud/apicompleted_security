@@ -1,7 +1,3 @@
 package com.example.ecommerce_api.dto.User;
 
-public record UserResponse(
-        Long id,
-        String username,
-        String email
-) {}
+public record UserResponse (long id, String username, String email) {}
