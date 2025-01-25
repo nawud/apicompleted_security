@@ -19,7 +19,7 @@ public class CategoryController {
     }
 
     @PostMapping("/api/categories")
-    public ResponseEntity<CategoryResponse> saveCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
+    public ResponseEntity<CategoryResponse> createCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
 
         CategoryResponse newCategoryResponse = categoryService.addCategory(categoryRequest);
         return new ResponseEntity<>(newCategoryResponse, HttpStatus.CREATED);
@@ -27,7 +27,7 @@ public class CategoryController {
     }
 
     @GetMapping("/api/categories")
-    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
+    public ResponseEntity<List<CategoryResponse>> readAllCategories() {
 
         return new ResponseEntity<>(categoryService.readCategories(), HttpStatus.OK);
 
