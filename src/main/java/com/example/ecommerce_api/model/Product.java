@@ -12,10 +12,8 @@ import org.hibernate.validator.constraints.URL;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-@Entity
-@Table(name = "products")
+@Getter @Setter
+@Entity @Table(name = "products")
 public class Product {
 
     @Id
@@ -23,26 +21,20 @@ public class Product {
     private long id;
 
     @NotNull
+    @Column(name = "price")
     private double price;
 
-    @NotNull
-    @NotBlank
+    @NotNull @NotBlank
     @Size(min = 5, max = 50, message = "Product name must be between 5 and 50 characters.")
+    @Column(name = "name")
     private String name;
 
     @URL(protocol = "https", message = "Image URL must be a valid HTTPS URL")
+    @Column(name = "image_url")
     private String imageURL;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
-
-    public Product (double price, String name, String imageURL) {
-
-        this.price = price;
-        this.name = name;
-        this.imageURL = imageURL;
-
-    }
 
 }

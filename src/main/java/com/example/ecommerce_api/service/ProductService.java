@@ -20,16 +20,17 @@ public class ProductService {
     private final iProductRepository iProductRepository;
     private final iCategoryRepository iCategoryRepository;
 
-    public ProductService (iProductRepository iProductRepository, iCategoryRepository iCategoryRepository) {
-
+    public ProductService (
+            iProductRepository iProductRepository,
+            iCategoryRepository iCategoryRepository
+    ) {
         this.iProductRepository = iProductRepository;
         this.iCategoryRepository = iCategoryRepository;
-
     }
 
-    public ProductResponse createProduct (ProductRequest productRequest) {
+    public ProductResponse createProduct (ProductRequest newProductRequest) {
 
-        Product newProduct = ProductMapper.dtoToEntity(productRequest);
+        Product newProduct = ProductMapper.dtoToEntity(newProductRequest);
         Product savedProduct = iProductRepository.save(newProduct);
 
         return ProductMapper.entityToDTO(savedProduct);
@@ -43,7 +44,6 @@ public class ProductService {
         if (products.isEmpty()) throw new EmptyException();
 
         return products.stream().map(ProductMapper::entityToDTO).toList();
-
     }
 
     public Product updateProduct (long id, ProductRequest productRequest) {
