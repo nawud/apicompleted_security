@@ -33,7 +33,7 @@ public class Product {
     @URL(protocol = "https", message = "Image URL must be a valid HTTPS URL")
     private String imageURL;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
