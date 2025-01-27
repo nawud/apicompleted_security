@@ -59,7 +59,7 @@ public class UserService {
 
             return iUserRepository.save(existingUser);
 
-        } throw new ObjectNotFoundException(userRequest.username(), id);
+        } throw new ObjectNotFoundException("user", id);
 
     }
 
