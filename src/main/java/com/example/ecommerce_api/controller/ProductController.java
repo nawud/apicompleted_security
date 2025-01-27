@@ -21,7 +21,7 @@ public class ProductController {
     @PostMapping("/api/products")
     public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductRequest productRequest) {
 
-        ProductResponse newProductResponse = productService.addProduct(productRequest);
+        ProductResponse newProductResponse = productService.createProduct(productRequest);
         return new ResponseEntity<>(newProductResponse, HttpStatus.CREATED);
 
     }
@@ -29,7 +29,7 @@ public class ProductController {
     @GetMapping("/api/products")
     public ResponseEntity<List<ProductResponse>> readAllProducts() {
 
-        return new ResponseEntity<>(productService.getProducts(), HttpStatus.OK);
+        return new ResponseEntity<>(productService.readProducts(), HttpStatus.OK);
 
     }
 
@@ -41,7 +41,7 @@ public class ProductController {
 
         try { productService.updateProduct(id, request); } catch (RuntimeException e) {
 
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         } return  new ResponseEntity<>(HttpStatus.OK);
 

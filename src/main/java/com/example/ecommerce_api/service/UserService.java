@@ -1,11 +1,17 @@
 package com.example.ecommerce_api.service;
 
+import ch.qos.logback.core.model.Model;
 import com.example.ecommerce_api.dto.User.UserMapper;
 import com.example.ecommerce_api.dto.User.UserRequest;
 import com.example.ecommerce_api.dto.User.UserResponse;
+import com.example.ecommerce_api.exceptions.EmptyException;
+import com.example.ecommerce_api.exceptions.ObjectNotFoundException;
 import com.example.ecommerce_api.model.User;
 import com.example.ecommerce_api.repository.iUserRepository;
+import jakarta.persistence.metamodel.Metamodel;
 import org.springframework.stereotype.Service;
+
+import javax.swing.text.html.parser.Entity;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +39,7 @@ public class UserService {
 
         List<User> users = iUserRepository.findAll();
 
-        if (users.isEmpty()) throw new RuntimeException("Not found");
+        if (users.isEmpty()) throw new EmptyException();
 
         return users.stream().map(UserMapper::EntityToDTO).toList();
 
@@ -53,7 +59,7 @@ public class UserService {
 
             return iUserRepository.save(existingUser);
 
-        } throw new RuntimeException("User with id: " + id + " not found.");
+        } throw new ObjectNotFoundException(userRequest.username(), id);
 
     }
 

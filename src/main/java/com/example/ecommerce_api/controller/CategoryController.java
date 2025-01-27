@@ -21,7 +21,7 @@ public class CategoryController {
     @PostMapping("/api/categories")
     public ResponseEntity<CategoryResponse> createCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
 
-        CategoryResponse newCategoryResponse = categoryService.addCategory(categoryRequest);
+        CategoryResponse newCategoryResponse = categoryService.createCategory(categoryRequest);
         return new ResponseEntity<>(newCategoryResponse, HttpStatus.CREATED);
 
     }
@@ -41,7 +41,7 @@ public class CategoryController {
 
         try { categoryService.updateCategory(id, request); } catch (RuntimeException e) {
 
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         } return  new ResponseEntity<>(HttpStatus.OK);
 

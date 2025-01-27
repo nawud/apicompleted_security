@@ -21,7 +21,7 @@ public class UserController {
     @PostMapping("/api/users")
     public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest request) {
 
-        UserResponse newUserResponse = userService.addUser(request);
+        UserResponse newUserResponse = userService.createUser(request);
         return new ResponseEntity<>(newUserResponse, HttpStatus.CREATED);
 
     }
@@ -41,7 +41,7 @@ public class UserController {
 
         try { userService.updateUser(id, request); } catch (RuntimeException e) {
 
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         } return  new ResponseEntity<>(HttpStatus.OK);
 

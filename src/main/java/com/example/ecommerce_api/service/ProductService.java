@@ -3,6 +3,8 @@ package com.example.ecommerce_api.service;
 import com.example.ecommerce_api.dto.Product.ProductMapper;
 import com.example.ecommerce_api.dto.Product.ProductRequest;
 import com.example.ecommerce_api.dto.Product.ProductResponse;
+import com.example.ecommerce_api.exceptions.EmptyException;
+import com.example.ecommerce_api.exceptions.ObjectNotFoundException;
 import com.example.ecommerce_api.model.Product;
 import com.example.ecommerce_api.repository.iProductRepository;
 import org.springframework.stereotype.Service;
@@ -33,7 +35,7 @@ public class ProductService {
 
         List<Product> products = iProductRepository.findAll();
 
-        if (products.isEmpty()) throw new RuntimeException("Not found");
+        if (products.isEmpty()) throw new EmptyException();
 
         return products.stream().map(ProductMapper::entityToDTO).toList();
 
@@ -53,7 +55,7 @@ public class ProductService {
 
             return iProductRepository.save(existingProduct);
 
-        } throw new RuntimeException("User with id: " + id + " not found.");
+        } throw new ObjectNotFoundException(productRequest.name(), id);
 
     }
 

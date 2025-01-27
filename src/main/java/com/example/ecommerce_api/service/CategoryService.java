@@ -3,6 +3,8 @@ package com.example.ecommerce_api.service;
 import com.example.ecommerce_api.dto.Category.CategoryMapper;
 import com.example.ecommerce_api.dto.Category.CategoryRequest;
 import com.example.ecommerce_api.dto.Category.CategoryResponse;
+import com.example.ecommerce_api.exceptions.EmptyException;
+import com.example.ecommerce_api.exceptions.ObjectNotFoundException;
 import com.example.ecommerce_api.model.Category;
 import com.example.ecommerce_api.repository.iCategoryRepository;
 import org.springframework.stereotype.Service;
@@ -33,7 +35,7 @@ public class CategoryService {
 
         List<Category> categories = iCategoryRepository.findAll();
 
-        if (categories.isEmpty()) throw new RuntimeException("Not found");
+        if (categories.isEmpty()) throw new EmptyException();
 
         return categories.stream().map(CategoryMapper::EntityToDTO).toList();
 
@@ -51,7 +53,7 @@ public class CategoryService {
 
             return iCategoryRepository.save(existingCategory);
 
-        } throw new RuntimeException("User with id: " + id + " not found.");
+        } throw new ObjectNotFoundException(categoryRequest.name(), id);
 
     }
 
