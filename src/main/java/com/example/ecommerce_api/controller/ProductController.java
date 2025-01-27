@@ -3,6 +3,8 @@ package com.example.ecommerce_api.controller;
 import com.example.ecommerce_api.dto.Category.CategoryRequest;
 import com.example.ecommerce_api.dto.Product.ProductRequest;
 import com.example.ecommerce_api.dto.Product.ProductResponse;
+import com.example.ecommerce_api.model.Category;
+import com.example.ecommerce_api.model.Product;
 import com.example.ecommerce_api.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -60,11 +62,11 @@ public class ProductController {
     }
 
     @GetMapping("/api/products/{categoryName}")
-    public ResponseEntity<List<ProductResponse>> getProductsByCategory(@RequestParam String categoryName, long id) {
+    public ResponseEntity<List<ProductResponse>> getProductsByCategory(@RequestParam String categoryName, List<Product> products, long id) {
 
-        CategoryRequest categoryRequest = new CategoryRequest(categoryName);
-        List<ProductResponse> products = productService.getProductsByCategory(categoryRequest, id);
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        CategoryRequest categoryRequest = new CategoryRequest(categoryName, products);
+        List<ProductResponse> productResponseList = productService.getProductsByCategory(categoryRequest, id);
+        return new ResponseEntity<>(productResponseList, HttpStatus.OK);
 
     }
 

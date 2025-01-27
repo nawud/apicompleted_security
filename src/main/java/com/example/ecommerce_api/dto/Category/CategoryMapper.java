@@ -6,13 +6,13 @@ public class CategoryMapper {
 
     public static Category DTOToEntity (CategoryRequest categoryRequest) {
 
-        return new Category(categoryRequest.name());
+        return new Category(categoryRequest.name(), categoryRequest.products());
 
     }
 
     public static CategoryResponse EntityToDTO(Category category) {
 
-        return new CategoryResponse(category.getId(), category.getName());
+        return new CategoryResponse(category.getId(), category.getName(), category.getProducts());
 
     }
 

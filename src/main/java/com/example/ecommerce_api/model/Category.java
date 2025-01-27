@@ -30,10 +30,11 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-    private List<Product> products;
+    private List<Product> products = new ArrayList<>();
 
-    public Category(String name) {
+    public Category(String name, List<Product> products) {
         this.name = name;
+        this.products = products;
     }
 
 }

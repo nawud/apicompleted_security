@@ -1,5 +1,6 @@
 package com.example.ecommerce_api.dto.Product;
 
+import com.example.ecommerce_api.model.Category;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -16,6 +17,9 @@ public record ProductRequest (
         String name,
 
         @URL(protocol = "https", message = "Image (URL) is required!")
-        String imageURL
+        String imageURL,
+
+        @NotNull
+        Category category
 
 ) {}
