@@ -2,12 +2,14 @@ package com.example.ecommerce_api.controller;
 
 import com.example.ecommerce_api.dto.Category.CategoryRequest;
 import com.example.ecommerce_api.dto.Category.CategoryResponse;
+import com.example.ecommerce_api.dto.Product.ProductResponse;
 import com.example.ecommerce_api.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class CategoryController {
@@ -33,15 +35,32 @@ public class CategoryController {
 
     }
 
+    @GetMapping("/api/categories/{id}")
+    public ResponseEntity<Optional<CategoryResponse>> getCategoryById (@PathVariable long id) {
+
+        Optional<CategoryResponse> categoryResponse = categoryService.findCategoryById(id);
+
+        if (categoryResponse.isPresent()) {
+
+            return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
+
+        } return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+    }
+
     @PutMapping("/api/categories/{id}")
     public ResponseEntity<CategoryResponse> updateCategory(
             @PathVariable long id,
-            @Valid @RequestBody CategoryRequest request
+            @Valid @RequestBody CategoryRequest categoryRequest
     ) {
 
-        try { categoryService.updateCategory(id, request); } catch (RuntimeException e) {
+        try {
 
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            categoryService.updateCategory(id, categoryRequest);
+
+        } catch (RuntimeException e) {
+
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         } return  new ResponseEntity<>(HttpStatus.OK);
 

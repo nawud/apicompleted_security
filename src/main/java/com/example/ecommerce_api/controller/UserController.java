@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class UserController {
@@ -19,9 +20,9 @@ public class UserController {
     }
 
     @PostMapping("/api/users")
-    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest request) {
+    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest userRequest) {
 
-        UserResponse newUserResponse = userService.createUser(request);
+        UserResponse newUserResponse = userService.createUser(userRequest);
         return new ResponseEntity<>(newUserResponse, HttpStatus.CREATED);
 
     }
@@ -33,17 +34,28 @@ public class UserController {
 
     }
 
+    @GetMapping("/api/users/{id}")
+    public ResponseEntity<Optional<UserResponse>> getUserById (@PathVariable long id) {
+
+        return new ResponseEntity<>(userService.findUserById(id), HttpStatus.OK);
+
+    }
+
     @PutMapping("/api/users/{id}")
     public ResponseEntity<UserResponse> updateUser(
             @PathVariable long id,
-            @Valid @RequestBody UserRequest request
+            @Valid @RequestBody UserRequest userRequest
     ) {
 
-        try { userService.updateUser(id, request); } catch (RuntimeException e) {
+        try {
 
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            userService.updateUser(id, userRequest);
 
-        } return  new ResponseEntity<>(HttpStatus.OK);
+        } catch (RuntimeException e) {
+
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        } return new ResponseEntity<>(HttpStatus.OK);
 
     }
 

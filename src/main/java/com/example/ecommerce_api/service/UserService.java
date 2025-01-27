@@ -1,11 +1,14 @@
 package com.example.ecommerce_api.service;
 
 import ch.qos.logback.core.model.Model;
+import com.example.ecommerce_api.dto.Product.ProductMapper;
+import com.example.ecommerce_api.dto.Product.ProductResponse;
 import com.example.ecommerce_api.dto.User.UserMapper;
 import com.example.ecommerce_api.dto.User.UserRequest;
 import com.example.ecommerce_api.dto.User.UserResponse;
 import com.example.ecommerce_api.exceptions.EmptyException;
 import com.example.ecommerce_api.exceptions.ObjectNotFoundException;
+import com.example.ecommerce_api.model.Product;
 import com.example.ecommerce_api.model.User;
 import com.example.ecommerce_api.repository.iUserRepository;
 import jakarta.persistence.metamodel.Metamodel;
@@ -65,4 +68,14 @@ public class UserService {
 
     public void deleteUser (long id) { iUserRepository.deleteById(id); }
 
+    public Optional<UserResponse> findUserById (long id) {
+
+        Optional<User> foundUser = iUserRepository.findById(id);
+        if (foundUser.isPresent()) {
+
+            UserResponse userResponse = UserMapper.EntityToDTO(foundUser.get());
+            return Optional.of(userResponse);
+
+        } throw new ObjectNotFoundException("product", id);
+    }
 }
