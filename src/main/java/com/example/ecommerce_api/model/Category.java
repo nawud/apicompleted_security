@@ -31,4 +31,10 @@ public class Category {
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<>();
 
+    public Category(
+            @NotNull @NotBlank(message = "Category is required!")
+            @Size(min = 5, max = 30, message = "Name must be between 5 and 30 characters.")
+            String name
+    ) {}
+
 }
