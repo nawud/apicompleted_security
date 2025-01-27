@@ -9,6 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -25,6 +28,9 @@ public class Category {
     @NotNull
     @Size(min = 5, max = 30, message = "Category name must be between 5 and 30 characters.")
     private String name;
+
+    @OneToMany(mappedBy = "products")
+    private List<Product> products = new ArrayList<>();
 
     public Category(String name) {
         this.name = name;

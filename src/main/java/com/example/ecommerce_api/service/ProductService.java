@@ -1,11 +1,14 @@
 package com.example.ecommerce_api.service;
 
+import com.example.ecommerce_api.dto.Category.CategoryRequest;
 import com.example.ecommerce_api.dto.Product.ProductMapper;
 import com.example.ecommerce_api.dto.Product.ProductRequest;
 import com.example.ecommerce_api.dto.Product.ProductResponse;
 import com.example.ecommerce_api.exceptions.EmptyException;
 import com.example.ecommerce_api.exceptions.ObjectNotFoundException;
+import com.example.ecommerce_api.model.Category;
 import com.example.ecommerce_api.model.Product;
+import com.example.ecommerce_api.repository.iCategoryRepository;
 import com.example.ecommerce_api.repository.iProductRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -15,10 +18,12 @@ import java.util.Optional;
 public class ProductService {
 
     private final iProductRepository iProductRepository;
+    private final iCategoryRepository iCategoryRepository;
 
-    public ProductService (iProductRepository iProductRepository) {
+    public ProductService (iProductRepository iProductRepository, iCategoryRepository iCategoryRepository) {
 
         this.iProductRepository = iProductRepository;
+        this.iCategoryRepository = iCategoryRepository;
 
     }
 
@@ -60,5 +65,20 @@ public class ProductService {
     }
 
     public void deleteProduct (long id) { iProductRepository.deleteById(id); }
+
+    public List<ProductResponse> getProductsByCategory (CategoryRequest categoryRequest, long id) {
+
+        Optional<Category> categoryOptional = iCategoryRepository.findByName(categoryRequest.name());
+
+        if (categoryOptional.isPresent()) {
+            List<Product> productsByCategory = iProductRepository.findByCategory(categoryOptional);
+
+            return productsByCategory.stream()
+                    .map(ProductMapper::entityToDTO)
+                    .toList();
+
+        } throw new ObjectNotFoundException(categoryRequest.name(), id);
+
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.example.ecommerce_api.controller;
 
+import com.example.ecommerce_api.dto.Category.CategoryRequest;
 import com.example.ecommerce_api.dto.Product.ProductRequest;
 import com.example.ecommerce_api.dto.Product.ProductResponse;
 import com.example.ecommerce_api.service.ProductService;
@@ -55,6 +56,15 @@ public class ProductController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         } return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+    @GetMapping("/api/products/{categoryName}")
+    public ResponseEntity<List<ProductResponse>> getProductsByCategory(@RequestParam String categoryName, long id) {
+
+        CategoryRequest categoryRequest = new CategoryRequest(categoryName);
+        List<ProductResponse> products = productService.getProductsByCategory(categoryRequest, id);
+        return new ResponseEntity<>(products, HttpStatus.OK);
 
     }
 
