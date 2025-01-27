@@ -29,8 +29,8 @@ public class Category {
     @Size(min = 5, max = 30, message = "Category name must be between 5 and 30 characters.")
     private String name;
 
-    @OneToMany(mappedBy = "products")
-    private List<Product> products = new ArrayList<>();
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    private List<Product> products;
 
     public Category(String name) {
         this.name = name;
