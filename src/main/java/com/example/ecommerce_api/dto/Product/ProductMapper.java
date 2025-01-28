@@ -8,29 +8,30 @@ import java.util.Optional;
 
 public class ProductMapper {
 
-    public static Product dtoToEntity(
+    public static Product DTOToEntity(
             ProductRequest productRequest,
             iCategoryRepository iCategoryRepository
     ) {
-        Optional<Category> category = iCategoryRepository.findById(productRequest.categoryId());
+
+        Category category = iCategoryRepository.findById(productRequest.categoryId());
 
         return new Product (
-                productRequest.name(),
                 productRequest.price(),
+                productRequest.name(),
                 productRequest.imageURL(),
                 category
         );
 
     }
 
-    public static ProductResponse entityToDTO(Product product) {
+    public static ProductResponse EntityToDTO (Product product) {
 
         return new ProductResponse (
                 product.getId(),
                 product.getPrice(),
                 product.getName(),
                 product.getImageURL(),
-                product.getCategory().getId()
+                CategoryMapper.EntityToDTO(product.getCategory()).id()
         );
 
     }

@@ -8,17 +8,16 @@ import org.hibernate.validator.constraints.URL;
 
 public record ProductRequest (
 
-        @NotNull @Positive
+        @Positive
         double price,
 
-        @NotNull @NotBlank(message = "Name is required!")
+        @NotBlank(message = "Name is required!")
         @Size(min = 5, max = 50, message = "Name must be between 5 and 50 characters!")
         String name,
 
-        @URL(message = "Image (URL) is required!")
+        @URL(message = "Image URL is required!")
         String imageURL,
 
-        @NotNull
         long categoryId
 
 ) {}
