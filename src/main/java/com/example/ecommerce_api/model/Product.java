@@ -15,43 +15,39 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter @Setter
-@Entity @Table(name = "products")
+@Getter
+@Setter
+@Entity
+@Table(name = "products")
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotNull
-    @Column(name = "price")
+    @Column(name = "price", nullable = false)
     private double price;
 
-    @NotNull @NotBlank
-    @Size(min = 5, max = 50, message = "Product name must be between 5 and 50 characters.")
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @URL(protocol = "https", message = "Image URL must be a valid HTTPS URL")
-    @Column(name = "image_url")
+    @Column(name = "image_url", nullable = false)
     private String imageURL;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
-    public Product (
-
-            @NotNull @NotBlank(message = "Name is required!")
-            @Size(min = 5, max = 50, message = "Name must be between 5 and 50 characters!")
-            String name,
-
-            @NotNull @Positive
+    public Product(
             double price,
-
-            @URL(message = "Image (URL) is required!")
-            String imageURL, Optional<Category> category
-
-    ) {}
+            String name,
+            String imageURL,
+            Category category
+    ) {
+        this.price = price;
+        this.name = name;
+        this.imageURL = imageURL;
+        this.category = category;
+    }
 
 }

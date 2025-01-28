@@ -66,14 +66,17 @@ public class CategoryService {
 
         Optional<Category> foundCategory = iCategoryRepository.findById(id);
 
-        if (foundCategory.isPresent()) {
+        if (foundCategory.isEmpty()) {
+
+            throw new ObjectNotFoundException("category", id);
+
+        } else {
 
             CategoryResponse categoryResponse = CategoryMapper.EntityToDTO(foundCategory.get());
 
             return Optional.of(categoryResponse);
 
         }
-        throw new ObjectNotFoundException("category", id);
 
     }
 

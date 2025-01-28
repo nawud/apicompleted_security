@@ -11,6 +11,8 @@ import com.example.ecommerce_api.model.Product;
 import com.example.ecommerce_api.repository.iCategoryRepository;
 import com.example.ecommerce_api.repository.iProductRepository;
 import org.springframework.stereotype.Service;
+
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,14 +52,17 @@ public class ProductService {
     public Product updateProduct (long id, ProductRequest productRequest) {
 
         Optional<Product> foundProduct = iProductRepository.findById(id);
+        Optional<Category> foundCategory = iCategoryRepository.findById(productRequest.categoryId());
 
-        if (foundProduct.isPresent()) {
+        if (foundProduct.isPresent() && foundCategory.isPresent()) {
 
             Product existingProduct = foundProduct.get();
+            Category existingCategory = foundCategory.get();
 
             existingProduct.setPrice(productRequest.price());
             existingProduct.setName(productRequest.name());
             existingProduct.setImageURL(productRequest.imageURL());
+            existingProduct.setCategory(existingCategory);
 
             return iProductRepository.save(existingProduct);
 

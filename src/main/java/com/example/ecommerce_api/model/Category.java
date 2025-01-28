@@ -23,15 +23,14 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotNull @NotBlank
-    @Size(min = 5, max = 30, message = "Category name must be between 5 and 30 characters.")
+
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
     private List<Product> products = new ArrayList<>();
 
-    public Category(
+    public Category (
             @NotNull @NotBlank(message = "Category is required!")
             @Size(min = 5, max = 30, message = "Name must be between 5 and 30 characters.")
             String name

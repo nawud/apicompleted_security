@@ -80,12 +80,13 @@ public class ProductController {
 
     @GetMapping("/api/products/{categoryName}")
     public ResponseEntity<List<ProductResponse>> getProductsByCategory(
-            @RequestParam String categoryName,
+            @RequestParam long id,
+            String categoryName,
             List<Product> products
     ) {
 
-        CategoryRequest categoryRequest = new CategoryRequest(categoryName);
-        List<ProductResponse> productResponseList = productService.getProductsByCategory(categoryRequest);
+        CategoryRequest categoryRequest = new CategoryRequest(id, categoryName);
+        List<ProductResponse> productResponseList = productService.getProductsByCategory(categoryRequest, id);
         return new ResponseEntity<>(productResponseList, HttpStatus.OK);
 
     }

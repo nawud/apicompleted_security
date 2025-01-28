@@ -12,7 +12,6 @@ public class ProductMapper {
             ProductRequest productRequest,
             iCategoryRepository iCategoryRepository
     ) {
-
         Optional<Category> category = iCategoryRepository.findById(productRequest.categoryId());
 
         return new Product (
@@ -31,7 +30,7 @@ public class ProductMapper {
                 product.getPrice(),
                 product.getName(),
                 product.getImageURL(),
-                CategoryMapper.EntityToDTO(product.getCategory()).id()
+                product.getCategory().getId()
         );
 
     }
