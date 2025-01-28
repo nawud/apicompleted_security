@@ -11,8 +11,6 @@ import com.example.ecommerce_api.model.Product;
 import com.example.ecommerce_api.repository.iCategoryRepository;
 import com.example.ecommerce_api.repository.iProductRepository;
 import org.springframework.stereotype.Service;
-
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,10 +30,10 @@ public class ProductService {
 
     public ProductResponse createProduct (ProductRequest newProductRequest) {
 
-        Product newProduct = ProductMapper.dtoToEntity(newProductRequest, iCategoryRepository);
+        Product newProduct = ProductMapper.DTOToEntity(newProductRequest, iCategoryRepository);
         Product savedProduct = iProductRepository.save(newProduct);
 
-        return ProductMapper.entityToDTO(savedProduct);
+        return ProductMapper.EntityToDTO(savedProduct);
 
     }
 
@@ -45,24 +43,21 @@ public class ProductService {
 
         if (products.isEmpty()) throw new EmptyException();
 
-        return products.stream().map(ProductMapper::entityToDTO).toList();
+        return products.stream().map(ProductMapper::EntityToDTO).toList();
 
     }
 
     public Product updateProduct (long id, ProductRequest productRequest) {
 
         Optional<Product> foundProduct = iProductRepository.findById(id);
-        Optional<Category> foundCategory = iCategoryRepository.findById(productRequest.categoryId());
 
-        if (foundProduct.isPresent() && foundCategory.isPresent()) {
+        if (foundProduct.isPresent()) {
 
             Product existingProduct = foundProduct.get();
-            Category existingCategory = foundCategory.get();
 
             existingProduct.setPrice(productRequest.price());
             existingProduct.setName(productRequest.name());
             existingProduct.setImageURL(productRequest.imageURL());
-            existingProduct.setCategory(existingCategory);
 
             return iProductRepository.save(existingProduct);
 
@@ -70,17 +65,25 @@ public class ProductService {
 
     }
 
-    public void deleteProduct (long id) { iProductRepository.deleteById(id); }
+    public void deleteProduct (long id) {
+
+        Optional<Product> product = iProductRepository.findById(id);
+
+        if (product.isPresent()) { iProductRepository.deleteById(id); }
+
+    }
 
     public Optional<ProductResponse> findProductById (long id) {
 
         Optional<Product> foundProduct = iProductRepository.findById(id);
+
         if (foundProduct.isPresent()) {
 
-            ProductResponse productResponse = ProductMapper.entityToDTO(foundProduct.get());
-            return Optional.of(productResponse);
+            ProductResponse productResponseById = ProductMapper.EntityToDTO(foundProduct.get());
+            return Optional.of(productResponseById);
 
         } throw new ObjectNotFoundException("product", id);
+
     }
 
     public List<ProductResponse> getProductsByCategory (
@@ -93,7 +96,7 @@ public class ProductService {
 
             List<Product> productsByCategory = iProductRepository.findByCategory(foundCategory);
 
-            return productsByCategory.stream().map(ProductMapper::entityToDTO).toList();
+            return productsByCategory.stream().map(ProductMapper::EntityToDTO).toList();
 
         } throw new ObjectNotFoundException("category", id);
 

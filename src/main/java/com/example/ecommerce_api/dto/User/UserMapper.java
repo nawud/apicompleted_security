@@ -4,7 +4,7 @@ import com.example.ecommerce_api.model.User;
 
 public class UserMapper {
 
-    public static User DTOToEntity(UserRequest userRequest) {
+    public static User DTOToEntity (UserRequest userRequest) {
 
         return new User(
                 userRequest.username(),
@@ -14,7 +14,7 @@ public class UserMapper {
 
     }
 
-    public static UserResponse EntityToDTO(User user) {
+    public static UserResponse EntityToDTO (User user) {
 
         return new UserResponse(
                 user.getId(),

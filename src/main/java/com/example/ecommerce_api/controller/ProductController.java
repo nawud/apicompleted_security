@@ -1,6 +1,7 @@
 package com.example.ecommerce_api.controller;
 
 import com.example.ecommerce_api.dto.Category.CategoryRequest;
+import com.example.ecommerce_api.dto.Product.ProductMapper;
 import com.example.ecommerce_api.dto.Product.ProductRequest;
 import com.example.ecommerce_api.dto.Product.ProductResponse;
 import com.example.ecommerce_api.model.Product;
@@ -22,7 +23,7 @@ public class ProductController {
     }
 
     @PostMapping("/api/products")
-    public ResponseEntity<?> createProduct(@Valid @RequestBody ProductRequest productRequest) {
+    public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductRequest productRequest) {
 
         ProductResponse newProductResponse = productService.createProduct(productRequest);
         return new ResponseEntity<>(newProductResponse, HttpStatus.CREATED);
@@ -36,19 +37,6 @@ public class ProductController {
 
     }
 
-    @GetMapping("/api/products/{id}")
-    public ResponseEntity<Optional<ProductResponse>> getProductById (@PathVariable long id) {
-
-        Optional<ProductResponse> productResponse = productService.findProductById(id);
-
-        if (productResponse.isPresent()) {
-
-            return new ResponseEntity<>(productResponse, HttpStatus.OK);
-
-        } return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-    }
-
     @PutMapping("/api/products/{id}")
     public ResponseEntity<ProductResponse> updateProduct(
             @PathVariable long id,
@@ -57,37 +45,21 @@ public class ProductController {
 
         try {
 
-            productService.updateProduct(id, productRequest);
+            ProductResponse productResponse = ProductMapper.EntityToDTO(productService.updateProduct(id, productRequest));
+            return new ResponseEntity<>(productResponse, HttpStatus.OK);
 
-        } catch (RuntimeException e) {
-
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        } return  new ResponseEntity<>(HttpStatus.OK);
+        } catch (RuntimeException e) { return new ResponseEntity<>(HttpStatus.NOT_FOUND); }
 
     }
 
     @DeleteMapping("/api/products/{id}")
     public ResponseEntity<ProductResponse> deleteProduct(@PathVariable long id) {
 
-        try { productService.deleteProduct(id); } catch (RuntimeException e) {
+        Optional<ProductResponse> productResponseOptional = productService.findProductById(id);
 
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (productResponseOptional.isPresent()) { productService.deleteProduct(id); }
 
-        } return new ResponseEntity<>(HttpStatus.OK);
-
-    }
-
-    @GetMapping("/api/products/{categoryName}")
-    public ResponseEntity<List<ProductResponse>> getProductsByCategory(
-            @RequestParam long id,
-            String categoryName,
-            List<Product> products
-    ) {
-
-        CategoryRequest categoryRequest = new CategoryRequest(id, categoryName);
-        List<ProductResponse> productResponseList = productService.getProductsByCategory(categoryRequest, id);
-        return new ResponseEntity<>(productResponseList, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 
