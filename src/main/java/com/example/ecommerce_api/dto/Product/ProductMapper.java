@@ -1,9 +1,11 @@
 package com.example.ecommerce_api.dto.Product;
 
 import com.example.ecommerce_api.dto.Category.CategoryMapper;
+import com.example.ecommerce_api.exceptions.ObjectNotFoundException;
 import com.example.ecommerce_api.model.Category;
 import com.example.ecommerce_api.model.Product;
 import com.example.ecommerce_api.repository.iCategoryRepository;
+
 import java.util.Optional;
 
 public class ProductMapper {
@@ -13,14 +15,17 @@ public class ProductMapper {
             iCategoryRepository iCategoryRepository
     ) {
 
-        Category category = iCategoryRepository.findById(productRequest.categoryId());
+        Optional<Category> categoryOptional = iCategoryRepository.findById(productRequest.categoryId());
 
-        return new Product (
-                productRequest.price(),
-                productRequest.name(),
-                productRequest.imageURL(),
-                category
-        );
+        if (categoryOptional.isPresent()) {
+            Category category = categoryOptional.get();
+            return new Product (
+                    productRequest.price(),
+                    productRequest.name(),
+                    productRequest.imageURL(),
+                    category
+            );
+        } throw new ObjectNotFoundException("category", productRequest.categoryId());
 
     }
 
@@ -31,7 +36,7 @@ public class ProductMapper {
                 product.getPrice(),
                 product.getName(),
                 product.getImageURL(),
-                CategoryMapper.EntityToDTO(product.getCategory()).id()
+                product.getCategory().getId()
         );
 
     }

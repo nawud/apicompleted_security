@@ -50,6 +50,7 @@ public class ProductService {
     public Product updateProduct (long id, ProductRequest productRequest) {
 
         Optional<Product> foundProduct = iProductRepository.findById(id);
+        Optional<Category> optionalCategory = iCategoryRepository.findById(productRequest.categoryId());
 
         if (foundProduct.isPresent()) {
 
@@ -58,6 +59,7 @@ public class ProductService {
             existingProduct.setPrice(productRequest.price());
             existingProduct.setName(productRequest.name());
             existingProduct.setImageURL(productRequest.imageURL());
+            optionalCategory.ifPresent(existingProduct::setCategory);
 
             return iProductRepository.save(existingProduct);
 
@@ -90,7 +92,7 @@ public class ProductService {
             CategoryRequest categoryRequest, long id
     ) {
 
-        Optional<Category> foundCategory = iCategoryRepository.findByName(categoryRequest.name());
+        Optional<Category> foundCategory = iCategoryRepository.findById(categoryRequest.id());
 
         if (foundCategory.isPresent()) {
 
