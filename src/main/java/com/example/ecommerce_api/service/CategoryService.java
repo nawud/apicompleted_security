@@ -41,7 +41,7 @@ public class CategoryService {
 
     }
 
-    public Category updateCategory(long id, CategoryRequest categoryRequest) {
+    public Category updateCategory (long id, CategoryRequest categoryRequest) {
 
         Optional<Category> foundCategory = iCategoryRepository.findById(id);
 
@@ -53,30 +53,28 @@ public class CategoryService {
 
             return iCategoryRepository.save(existingCategory);
 
-        }
-        throw new ObjectNotFoundException("category", id);
+        } throw new ObjectNotFoundException("category", id);
 
     }
 
     public void deleteCategory(long id) {
-        iCategoryRepository.deleteById(id);
+
+        Optional<Category> category = iCategoryRepository.findById(id);
+
+        if (category.isPresent()) { iCategoryRepository.deleteById(id); }
+
     }
 
     public Optional<CategoryResponse> findCategoryById(long id) {
 
         Optional<Category> foundCategory = iCategoryRepository.findById(id);
 
-        if (foundCategory.isEmpty()) {
-
-            throw new ObjectNotFoundException("category", id);
-
-        } else {
+        if (foundCategory.isPresent()) {
 
             CategoryResponse categoryResponse = CategoryMapper.EntityToDTO(foundCategory.get());
-
             return Optional.of(categoryResponse);
 
-        }
+        } throw new EmptyException();
 
     }
 

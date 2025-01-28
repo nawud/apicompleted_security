@@ -1,8 +1,8 @@
 package com.example.ecommerce_api.controller;
 
+import com.example.ecommerce_api.dto.Category.CategoryMapper;
 import com.example.ecommerce_api.dto.Category.CategoryRequest;
 import com.example.ecommerce_api.dto.Category.CategoryResponse;
-import com.example.ecommerce_api.dto.Product.ProductResponse;
 import com.example.ecommerce_api.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -40,11 +40,7 @@ public class CategoryController {
 
         Optional<CategoryResponse> categoryResponse = categoryService.findCategoryById(id);
 
-        if (categoryResponse.isPresent()) {
-
-            return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
-
-        } return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
 
     }
 
@@ -56,24 +52,22 @@ public class CategoryController {
 
         try {
 
-            categoryService.updateCategory(id, categoryRequest);
+            CategoryResponse categoryResponse = CategoryMapper.EntityToDTO(categoryService.updateCategory(id, categoryRequest));
+            return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
 
-        } catch (RuntimeException e) {
-
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        } return  new ResponseEntity<>(HttpStatus.OK);
+        } catch (RuntimeException e) { return new ResponseEntity<>(HttpStatus.NOT_FOUND); }
 
     }
 
     @DeleteMapping("/api/categories/{id}")
     public ResponseEntity<CategoryResponse> deleteCategory(@PathVariable long id) {
 
-        try { categoryService.deleteCategory(id); } catch (RuntimeException e) {
+        try {
 
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            categoryService.deleteCategory(id);
+            return new ResponseEntity<>(HttpStatus.OK);
 
-        } return new ResponseEntity<>(HttpStatus.OK);
+        } catch (RuntimeException e) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
 
     }
 
