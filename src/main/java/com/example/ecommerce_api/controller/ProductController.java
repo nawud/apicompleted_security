@@ -1,10 +1,8 @@
 package com.example.ecommerce_api.controller;
 
-import com.example.ecommerce_api.dto.Category.CategoryRequest;
 import com.example.ecommerce_api.dto.Product.ProductMapper;
 import com.example.ecommerce_api.dto.Product.ProductRequest;
 import com.example.ecommerce_api.dto.Product.ProductResponse;
-import com.example.ecommerce_api.model.Product;
 import com.example.ecommerce_api.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -34,6 +32,15 @@ public class ProductController {
     public ResponseEntity<List<ProductResponse>> readAllProducts() {
 
         return new ResponseEntity<>(productService.readProducts(), HttpStatus.OK);
+
+    }
+
+    @GetMapping("/api/products/{id}")
+    public ResponseEntity<Optional<ProductResponse>> getProductById (@PathVariable long id) {
+
+        Optional<ProductResponse> productResponse = productService.findProductById(id);
+
+        return new ResponseEntity<>(productResponse, HttpStatus.OK);
 
     }
 
