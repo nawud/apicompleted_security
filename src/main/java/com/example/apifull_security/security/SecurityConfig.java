@@ -27,10 +27,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
 
                         .requestMatchers(HttpMethod.GET, "/funko-api/funko").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/funko-api/funko/{funkoId}").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/funko-api/funko/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/funko-api/funko").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/funko-api/funko/{funkoId}").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/funko-api/funko/{funkoId}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/funko-api/funko").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/funko-api/funko/**").hasRole("ADMIN")
 
                 )
 
