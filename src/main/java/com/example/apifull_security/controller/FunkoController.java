@@ -26,7 +26,7 @@ public class FunkoController {
 
         if (funko == null) {
 
-            throw new RuntimeException("Funko with ID: " + funkoId + " not found.")
+            throw new RuntimeException("Funko with ID: " + funkoId + " not found.");
 
         } return funko;
 
