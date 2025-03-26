@@ -1,6 +1,8 @@
 package com.example.apifull_security.controller;
 
+import com.example.apifull_security.dao.FunkoDAO;
 import com.example.apifull_security.entity.Funko;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -9,26 +11,31 @@ import java.util.List;
 @RequestMapping("/api")
 public class FunkoController {
 
+    private FunkoDAO funkoDAO;
+
+    @Autowired
+    public FunkoController( FunkoDAO theFunkoDAO ) { funkoDAO = theFunkoDAO; }
 
     @GetMapping("/funko")
-    public List<Funko> funkoList;
-
+    public List<Funko> findAll() { return funkoDAO.findAll(); }
 
     @GetMapping("/funko/{funkoId}")
     public Funko getFunko(@PathVariable int funkoId) {
 
-        for (Funko funko: this.funkoList()) {
+        Funko funko = this.funkoDAO.findById(funkoId);
 
-            if (funko.getId() == funkoId) { return funko; }
+        if (funko == null) {
 
-        } return null;
+            throw new RuntimeException("Funko with ID: " + funkoId + " not found.")
+
+        } return funko;
 
     }
 
     @PostMapping("/funko")
     public Funko addFunko(@RequestBody Funko theFunko) {
 
-        funkoList.add(theFunko);
+        this.funkoDAO.save(theFunko);
 
         return theFunko;
 
@@ -37,26 +44,18 @@ public class FunkoController {
     @PutMapping("/funko")
     public Funko updateFunko(@RequestBody Funko theFunko) {
 
-        for (Funko funko: funkoList) {
+        this.funkoDAO.update(theFunko);
 
-            if (funko.getId() == theFunko.getId()) {
-
-                funko.setName(theFunko.getName());
-                funko.setDescription(theFunko.getDescription());
-                funko.setPrice(theFunko.getPrice());
-
-            }
-
-        } return theFunko;
+        return theFunko;
 
     }
 
     @DeleteMapping("/funko/{funkoId}")
     public String deleteFunko(@PathVariable int funkoId) {
 
-        this.funkoList.removeIf(f -> f.getId() == funkoId);
+        this.funkoDAO.delete(funkoId);
 
-        return "Borrado Funko con ID: " + funkoId;
+        return "Deleted Funko with ID: " + funkoId;
 
     }
 
