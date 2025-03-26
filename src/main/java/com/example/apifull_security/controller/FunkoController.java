@@ -1,67 +1,63 @@
 package com.example.apifull_security.controller;
 
 import com.example.apifull_security.entity.Funko;
-import com.example.apifull_security.service.FunkoService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/funko")
+@RequestMapping("/api")
 public class FunkoController {
 
-    @Autowired
-    private FunkoService funkoService;
 
-    @GetMapping
-    public ResponseEntity<List<Funko>> getAllFunkos() {
-        List<Funko> funkos = funkoDAO.findAll();
-        return new ResponseEntity<>(funkos, HttpStatus.OK);
+    @GetMapping("/funko")
+    public List<Funko> funkoList;
+
+
+    @GetMapping("/funko/{funkoId}")
+    public Funko getFunko(@PathVariable int funkoId) {
+
+        for (Funko funko: this.funkoList()) {
+
+            if (funko.getId() == funkoId) { return funko; }
+
+        } return null;
+
     }
 
+    @PostMapping("/funko")
+    public Funko addFunko(@RequestBody Funko theFunko) {
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Funko> getFunkoById(@PathVariable Long id) {
-        Funko funko = funkoService.findById(id);
-        if (funko != null) {
-            return new ResponseEntity<>(funko, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        funkoList.add(theFunko);
+
+        return theFunko;
+
     }
 
-    // Crear un nuevo Funko
-    @PostMapping
-    public ResponseEntity<Funko> createFunko(@RequestBody Funko funko) {
-        Funko savedFunko = funkoService.save(funko);
-        return new ResponseEntity<>(savedFunko, HttpStatus.CREATED);
+    @PutMapping("/funko")
+    public Funko updateFunko(@RequestBody Funko theFunko) {
+
+        for (Funko funko: funkoList) {
+
+            if (funko.getId() == theFunko.getId()) {
+
+                funko.setName(theFunko.getName());
+                funko.setDescription(theFunko.getDescription());
+                funko.setPrice(theFunko.getPrice());
+
+            }
+
+        } return theFunko;
+
     }
 
-    // Actualizar un Funko existente
-    @PutMapping("/{id}")
-    public ResponseEntity<Funko> updateFunko(@PathVariable Long id, @RequestBody Funko funkoDetails) {
-        Funko funko = funkoService.findById(id);
-        if (funko != null) {
-            funko.setName(funkoDetails.getName());
-            funko.setDescription(funkoDetails.getDescription());
-            funko.setPrice(funkoDetails.getPrice());
+    @DeleteMapping("/funko/{funkoId}")
+    public String deleteFunko(@PathVariable int funkoId) {
 
-            Funko updatedFunko = funkoService.save(funko);
-            return new ResponseEntity<>(updatedFunko, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        this.funkoList.removeIf(f -> f.getId() == funkoId);
+
+        return "Borrado Funko con ID: " + funkoId;
+
     }
 
-    // Eliminar un Funko
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFunko(@PathVariable Long id) {
-        Funko funko = funkoService.findById(id);
-        if (funko != null) {
-            funkoService.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
 }
