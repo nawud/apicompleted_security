@@ -1,6 +1,6 @@
 package com.example.funkoapi.service;
 
-import com.example.apifull_security.DAO.FunkoDAO;
+import com.example.apifull_security.dao.FunkoDAO;
 import com.example.apifull_security.service.FunkoService;
 import com.example.funkoapi.entity.Funko;
 import org.springframework.beans.factory.annotation.Autowired;

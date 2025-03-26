@@ -1,6 +1,6 @@
-package com.example.apifull_security.FunkoController;
+package com.example.apifull_security.controller;
 
-import com.example.funkoapi.entity.Funko;
+import com.example.apifull_security.entity.Funko;
 import com.example.apifull_security.service.FunkoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,16 +10,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/funkos")
+@RequestMapping("/api/funko")
 public class FunkoController {
 
     @Autowired
     private FunkoService funkoService;
 
-
     @GetMapping
     public ResponseEntity<List<Funko>> getAllFunkos() {
-        List<Funko> funkos = funkoService.findAll();
+        List<Funko> funkos = funkoDAO.findAll();
         return new ResponseEntity<>(funkos, HttpStatus.OK);
     }
 

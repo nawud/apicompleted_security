@@ -1,11 +1,10 @@
-package com.example.apifull_security.DAO;
+package com.example.apifull_security.dao;
 
-import com.example.funkoapi.entity.Funko;
+import com.example.apifull_security.entity.Funko;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Repository
@@ -17,16 +16,20 @@ public class FunkoDAOImpl implements FunkoDAO {
 
     @Override
     public List<Funko> findAll() {
+
         return entityManager.createQuery("FROM Funko", Funko.class).getResultList();
+
     }
 
     @Override
-    public Funko findById(Long id) {
+    public Funko findById(int id) {
         return entityManager.find(Funko.class, id);
     }
 
     @Override
     public Funko save(Funko funko) {
+
+        // !
         if (funko.getId() == null) {
             entityManager.persist(funko);
             return funko;
@@ -36,10 +39,12 @@ public class FunkoDAOImpl implements FunkoDAO {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(int  id) {
+
         Funko funko = findById(id);
-        if (funko != null) {
-            entityManager.remove(funko);
-        }
+
+        if (funko != null) { entityManager.remove(funko); }
+
     }
+
 }
