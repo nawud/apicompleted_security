@@ -11,9 +11,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http
                 .authorizeHttpRequests(auth -> auth
 
@@ -23,12 +23,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/funko/{funkoId}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/funko/{funkoId}").hasRole("ADMIN")
 
-
                 )
 
                 .httpBasic(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable());
 
         return http.build();
+
     }
 }
