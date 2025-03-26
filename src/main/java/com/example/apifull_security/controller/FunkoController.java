@@ -4,14 +4,13 @@ import com.example.apifull_security.dao.FunkoDAO;
 import com.example.apifull_security.entity.Funko;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/funko-api")
 public class FunkoController {
 
-    private FunkoDAO funkoDAO;
+    private final FunkoDAO funkoDAO;
 
     @Autowired
     public FunkoController( FunkoDAO theFunkoDAO ) { funkoDAO = theFunkoDAO; }
