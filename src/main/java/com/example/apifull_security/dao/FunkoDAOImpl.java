@@ -3,23 +3,24 @@ package com.example.apifull_security.dao;
 import com.example.apifull_security.entity.Funko;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-@Transactional
 public class FunkoDAOImpl implements FunkoDAO {
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
+
+    @Autowired
+    public FunkoDAOImpl( EntityManager entityManager ) { this.entityManager = entityManager; }
 
     @Override
-    public List<Funko> findAll() {
-
-        return entityManager.createQuery("FROM Funko", Funko.class).getResultList();
-
-    }
+    @Transactional
+    public void save(Funko theFunko) { this.entityManager.persist(theFunko); }
 
     @Override
     public Funko findById(int id) {
@@ -27,23 +28,23 @@ public class FunkoDAOImpl implements FunkoDAO {
     }
 
     @Override
-    public Funko save(Funko funko) {
+    public List<Funko> findAll() {
 
-        // !
-        if (funko.getId() == null) {
-            entityManager.persist(funko);
-            return funko;
-        } else {
-            return entityManager.merge(funko);
-        }
+        TypedQuery<Funko> theQuery = entityManager.createQuery("FROM Funko", Funko.class);
+
+        return theQuery.getResultList();
+
     }
 
     @Override
-    public void deleteById(int  id) {
+    public void update(Funko theFunko) { entityManager.merge(theFunko); }
 
-        Funko funko = findById(id);
+    @Override
+    public void delete(int id) {
 
-        if (funko != null) { entityManager.remove(funko); }
+        Funko funko = this.entityManager.find(Funko.class, id);
+
+        entityManager.remove(funko);
 
     }
 

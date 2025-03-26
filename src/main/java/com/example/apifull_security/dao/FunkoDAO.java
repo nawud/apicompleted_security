@@ -5,13 +5,14 @@ import java.util.List;
 
 public interface FunkoDAO {
 
-        List<Funko> findAll();
+        void save(Funko theFunko);
 
         Funko findById(int id);
 
-        Funko save(Funko funko);
+        List<Funko> findAll();
 
-        void deleteById(int id);
+        void update(Funko theFunko);
 
+        void delete(int id);
 }
 
