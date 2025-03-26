@@ -1,40 +1,37 @@
-package com.example.funkoapi.entity;
+package com.example.apifull_security.entity;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "funkos") // Nombre de la tabla en la base de datos
+@Table(name = "funko")
 public class Funko {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Autoincremental para el ID
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-    @Column(nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(nullable = false)
-    private Double price;
-
+    @Column(name = "price", nullable = false)
+    private double price;
 
     public Funko() {}
 
-
-    public Funko(String name, String description, Double price) {
+    public Funko(String name, String description, double price) {
         this.name = name;
         this.description = description;
         this.price = price;
     }
 
-
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -54,18 +51,17 @@ public class Funko {
         this.description = description;
     }
 
-    public Double getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
-
     @Override
     public String toString() {
-        return "Funko{" +
+        return "Funko {" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
