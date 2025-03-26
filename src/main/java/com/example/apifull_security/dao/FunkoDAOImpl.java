@@ -37,9 +37,11 @@ public class FunkoDAOImpl implements FunkoDAO {
     }
 
     @Override
+    @Transactional
     public void update(Funko theFunko) { entityManager.merge(theFunko); }
 
     @Override
+    @Transactional
     public void delete(int id) {
 
         Funko funko = this.entityManager.find(Funko.class, id);

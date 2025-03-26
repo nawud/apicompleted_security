@@ -68,4 +68,11 @@ public class Funko {
                 ", price=" + price +
                 '}';
     }
+
+    public String showInfo( String name, String description, double price) {
+
+        return "Funko: " + name + ", " + description + " - $ " + price;
+
+    }
+
 }
